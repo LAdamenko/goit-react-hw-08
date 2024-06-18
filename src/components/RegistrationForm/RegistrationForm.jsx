@@ -1,6 +1,7 @@
 import { Formik, Form, Field } from 'formik';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/auth/operations';
+import toast from 'react-hot-toast';
 import css from './RegistrationForm.module.css';
 
 export default function RegistrationForm() {
@@ -9,9 +10,12 @@ export default function RegistrationForm() {
   const handleSubmit = (values, actions) => {
     dispatch(register(values))
       .unwrap()
-      .then(data => console.log(data))
-      .catch(err => console.log(err));
-
+      .then(() => {
+        toast.success('Registration is successful!');
+      })
+      .catch(() => {
+        toast.error('Error, input correct email and password!');
+      });
     actions.resetForm();
   };
 

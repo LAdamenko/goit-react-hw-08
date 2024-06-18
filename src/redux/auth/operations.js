@@ -15,12 +15,10 @@ export const register = createAsyncThunk(
   'auth/register',
   async (newUser, thunkAPI) => {
     try {
-      console.log('Registering user:', newUser);
       const res = await axios.post('/users/signup', newUser);
       setAuthHeader(res.data.token);
       return res.data;
     } catch (error) {
-      console.error('Error registering user:', error.response.data);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -34,7 +32,6 @@ export const login = createAsyncThunk(
       setAuthHeader(res.data.token);
       return res.data;
     } catch (error) {
-      console.error('Error registering user:', error.response.data);
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -53,15 +50,32 @@ export const refreshUser = createAsyncThunk(
   'auth/refresh',
   async (_, thunkAPI) => {
     const reduxState = thunkAPI.getState();
-    setAuthHeader(reduxState.auth.token);
-
-    const res = await axios.get('/users/current');
-    return res.data;
+    const token = reduxState.auth.token;
+    if (!token) {
+      console.error('No token found in state.');
+      return thunkAPI.rejectWithValue('No token found');
+    }
+    setAuthHeader(token);
+    try {
+      const res = await axios.get('/users/current');
+      return res.data;
+    } catch (error) {
+      console.error(
+        'Error refreshing user:',
+        error.response?.data || error.message
+      );
+      clearAuthHeader();
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
   },
   {
-    condition(_, thunkAPI) {
-      const reduxState = thunkAPI.getState();
-      return reduxState.auth.token !== null;
+    condition(_, { getState }) {
+      const { auth } = getState();
+      if (!auth.token) {
+        // console.warn('No token available in state for refresh');
+        return false;
+      }
+      return true;
     },
   }
 );

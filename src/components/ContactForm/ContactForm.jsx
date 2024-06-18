@@ -4,13 +4,21 @@ import * as Yup from 'yup';
 import { useId } from 'react';
 import css from './ContactForm.module.css';
 import { addContact } from '../../redux/contacts/operations';
+import toast from 'react-hot-toast';
 
 export default function ContactForm() {
   const dispatch = useDispatch();
   const fieldId = useId();
 
   const handleSubmit = (values, actions) => {
-    dispatch(addContact(values));
+    dispatch(addContact(values))
+      .unwrap()
+      .then(() => {
+        toast.success('Successfully add!');
+      })
+      .catch(() => {
+        toast.error('Error, input correct data');
+      });
     actions.resetForm();
   };
 

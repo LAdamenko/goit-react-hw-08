@@ -11,14 +11,22 @@ import ContactsPage from '../../pages/ContactsPage/ContactsPage';
 import Layout from '../Layout/Layout';
 import RestrictedRoute from '../RestrictedRoute';
 import PrivateRoute from '../PrivateRoute';
+import { Toaster } from 'react-hot-toast';
 
 export default function App() {
   const dispatch = useDispatch();
   const isRefreshing = useSelector(selectIsRefreshing);
+  // const error = useSelector(selectError);
 
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (error) {
+  //     console.error('Error during user refresh:', error);
+  //   }
+  // }, [error]);
 
   return isRefreshing ? (
     <div>REFRESHING USER...</div>
@@ -52,6 +60,7 @@ export default function App() {
             }
           />
         </Routes>
+        <Toaster position="top-center" reverseOrder={false} />
       </Layout>
     </div>
   );
