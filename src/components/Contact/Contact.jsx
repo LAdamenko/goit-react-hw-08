@@ -9,17 +9,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditModal from '../EditModal/EditModal';
 import css from './Contact.module.css';
+import DelModal from '../DelModal/DelModal';
 
 export default function Contact({ data: { id, name, number } }) {
   const dispatch = useDispatch();
   const [isModalOpen, setModalOpen] = useState(false);
+  const [delModalOpen, setDelModalOpen] = useState(false);
 
   const handleEditClick = () => {
     setModalOpen(true);
   };
 
   const handleDeleteClick = () => {
-    dispatch(deleteContact(id));
+    setDelModalOpen(true);
   };
 
   return (
@@ -46,6 +48,14 @@ export default function Contact({ data: { id, name, number } }) {
         open={isModalOpen}
         handleClose={() => setModalOpen(false)}
         initialValues={{ id, name, number }}
+      />
+      <DelModal
+        open={delModalOpen}
+        close={() => setDelModalOpen(false)}
+        handleDelete={() => {
+          dispatch(deleteContact(id));
+        }}
+        contactName={name}
       />
     </div>
   );

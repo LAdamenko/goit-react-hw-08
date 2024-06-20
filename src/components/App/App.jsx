@@ -12,24 +12,18 @@ import Layout from '../Layout/Layout';
 import RestrictedRoute from '../RestrictedRoute';
 import PrivateRoute from '../PrivateRoute';
 import { Toaster } from 'react-hot-toast';
+import Loader from '../Loader/Loader';
 
 export default function App() {
   const dispatch = useDispatch();
   const isRefreshing = useSelector(selectIsRefreshing);
-  // const error = useSelector(selectError);
 
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (error) {
-  //     console.error('Error during user refresh:', error);
-  //   }
-  // }, [error]);
-
   return isRefreshing ? (
-    <div>REFRESHING USER...</div>
+    <Loader />
   ) : (
     <div className={css.container}>
       <Layout>

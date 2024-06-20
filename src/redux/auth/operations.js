@@ -52,7 +52,6 @@ export const refreshUser = createAsyncThunk(
     const reduxState = thunkAPI.getState();
     const token = reduxState.auth.token;
     if (!token) {
-      console.error('No token found in state.');
       return thunkAPI.rejectWithValue('No token found');
     }
     setAuthHeader(token);
@@ -60,10 +59,6 @@ export const refreshUser = createAsyncThunk(
       const res = await axios.get('/users/current');
       return res.data;
     } catch (error) {
-      console.error(
-        'Error refreshing user:',
-        error.response?.data || error.message
-      );
       clearAuthHeader();
       return thunkAPI.rejectWithValue(error.response.data);
     }
