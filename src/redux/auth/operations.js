@@ -72,7 +72,6 @@ export const refreshUser = createAsyncThunk(
     condition(_, { getState }) {
       const { auth } = getState();
       if (!auth.token) {
-        // console.warn('No token available in state for refresh');
         return false;
       }
       return true;
